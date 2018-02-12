@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "bigoud.com.dronepilot"
-        minSdkVersion 24
+        minSdkVersion 22
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -43,4 +43,6 @@ dependencies {
     implementation('com.dji:dji-sdk:4.4.1')
     provided('com.dji:dji-sdk-provided:4.4.1')
     implementation 'com.android.support:multidex:1.0.2'
+
+    compile 'com.google.android.gms:play-services-location:11.8.0'
 }
