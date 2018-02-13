@@ -1,6 +1,13 @@
 package bigoud.com.dronepilot.controller;
 
 import bigoud.com.dronepilot.model.Position;
+import bigoud.com.dronepilot.model.drone.ConnectResult;
+import bigoud.com.dronepilot.model.drone.DroneTask;
+import bigoud.com.dronepilot.model.drone.InitFlightResult;
+import bigoud.com.dronepilot.model.drone.LookAtResult;
+import bigoud.com.dronepilot.model.drone.MoveToResult;
+import bigoud.com.dronepilot.model.drone.ReturnHomeResult;
+import bigoud.com.dronepilot.model.drone.TakePhotoResult;
 
 /**
  * Created by aeres on 2/12/2018.
@@ -9,9 +16,39 @@ import bigoud.com.dronepilot.model.Position;
 public class MavicPro extends VirtualDrone
 {
     @Override
-    public boolean connect()
+    public void onConnect(DroneTask<ConnectResult> result)
     {
-        return false;
+
+    }
+
+    @Override
+    public void onInitFlight(DroneTask<InitFlightResult> result)
+    {
+
+    }
+
+    @Override
+    public void onMoveTo(DroneTask<MoveToResult> result, Position pos)
+    {
+
+    }
+
+    @Override
+    public void onLookAt(DroneTask<LookAtResult> result, Position pos)
+    {
+
+    }
+
+    @Override
+    public void onReturnHome(DroneTask<ReturnHomeResult> result)
+    {
+
+    }
+
+    @Override
+    public void onTakePhoto(DroneTask<TakePhotoResult> result)
+    {
+
     }
 
     @Override
@@ -24,35 +61,5 @@ public class MavicPro extends VirtualDrone
     public void getVideo()
     {
 
-    }
-
-    @Override
-    public boolean initFlight()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean goToPoint(Position pos)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean lookAt(Position pos)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean takePhoto()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean returnHome()
-    {
-        return false;
     }
 }

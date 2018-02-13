@@ -1,6 +1,15 @@
 package bigoud.com.dronepilot.controller;
 
+import android.util.Log;
+
 import bigoud.com.dronepilot.model.Position;
+import bigoud.com.dronepilot.model.drone.ConnectResult;
+import bigoud.com.dronepilot.model.drone.DroneTask;
+import bigoud.com.dronepilot.model.drone.InitFlightResult;
+import bigoud.com.dronepilot.model.drone.LookAtResult;
+import bigoud.com.dronepilot.model.drone.MoveToResult;
+import bigoud.com.dronepilot.model.drone.ReturnHomeResult;
+import bigoud.com.dronepilot.model.drone.TakePhotoResult;
 
 /**
  * Created by aeres on 2/13/2018.
@@ -8,10 +17,43 @@ import bigoud.com.dronepilot.model.Position;
 
 public class SimulationDrone extends VirtualDrone
 {
+    private volatile Position dronePos = new Position(46.216050, 5.247543, 250);
+    private volatile boolean inAir = false;
+
     @Override
-    public boolean connect()
+    public void onConnect(DroneTask<ConnectResult> result)
     {
-        return false;
+
+    }
+
+    @Override
+    public void onInitFlight(DroneTask<InitFlightResult> result)
+    {
+
+    }
+
+    @Override
+    public void onMoveTo(DroneTask<MoveToResult> result, Position pos)
+    {
+
+    }
+
+    @Override
+    public void onLookAt(DroneTask<LookAtResult> result, Position pos)
+    {
+
+    }
+
+    @Override
+    public void onReturnHome(DroneTask<ReturnHomeResult> result)
+    {
+
+    }
+
+    @Override
+    public void onTakePhoto(DroneTask<TakePhotoResult> result)
+    {
+
     }
 
     @Override
@@ -24,35 +66,5 @@ public class SimulationDrone extends VirtualDrone
     public void getVideo()
     {
 
-    }
-
-    @Override
-    public boolean initFlight()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean goToPoint(Position pos)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean lookAt(Position pos)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean takePhoto()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean returnHome()
-    {
-        return false;
     }
 }
