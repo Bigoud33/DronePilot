@@ -1,4 +1,4 @@
-package bigoud.com.dronepilot;
+package bigoud.com.dronepilot.view;
 
 import android.Manifest;
 import android.content.pm.ActivityInfo;
@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import bigoud.com.dronepilot.R;
 import dji.internal.cache.component.FlightController;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener

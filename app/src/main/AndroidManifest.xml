@@ -64,7 +64,7 @@
         <service android:name="dji.sdk.sdkmanager.DJIGlobalService" />
         <!-- DJI SDK -->
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -72,14 +72,14 @@
         </activity>
         <activity android:name=".FPVActivity" />
         <activity
-            android:name=".Maps"
+            android:name=".view.Maps"
             android:label="@string/title_activity_maps" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Histo"
+            android:name=".view.Histo"
             android:label="@string/title_activity_histo"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
