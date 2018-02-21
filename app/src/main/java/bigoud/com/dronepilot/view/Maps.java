@@ -1,6 +1,7 @@
 package bigoud.com.dronepilot.view;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import bigoud.com.dronepilot.R;
+import bigoud.com.dronepilot.model.Position;
 import dji.internal.cache.component.FlightController;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener
@@ -48,6 +52,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback, Google
 
     private volatile ArrayList<PhotoPos> positions = new ArrayList();
     private Polygon polygon = null;
+    Maps that = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,24 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback, Google
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ((Button)findViewById(R.id.startButton)).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ArrayList<Position> dronePositions = new ArrayList();
+                for(PhotoPos p : that.positions)
+                    dronePositions.add(new Position(p.position.latitude, p.position.longitude, 20));
+
+                if(dronePositions.size() > 2)
+                {
+                    Intent intent = new Intent(that, PilotActivity.class);
+                    intent.putExtra("points", dronePositions);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
 
@@ -207,6 +230,11 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback, Google
 
             polygon = mMap.addPolygon(opt);
         }
+
+        if(positions.size() > 2)
+            ((Button)findViewById(R.id.startButton)).setVisibility(Button.VISIBLE);
+        else
+            ((Button)findViewById(R.id.startButton)).setVisibility(Button.INVISIBLE);
     }
 
     private double calcDistance(LatLng pos1, LatLng pos2)

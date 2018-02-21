@@ -9,4 +9,9 @@ import bigoud.com.dronepilot.model.Position;
 public class ConnectResult
 {
     public Position position = null;
+
+    public ConnectResult(Position pos)
+    {
+        this.position = pos;
+    }
 }

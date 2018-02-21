@@ -57,6 +57,7 @@
                 android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
                 android:resource="@xml/accessory_filter" />
         </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -67,6 +68,7 @@
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -74,6 +76,7 @@
         <activity
             android:name=".view.Maps"
             android:label="@string/title_activity_maps" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -82,6 +85,7 @@
             android:name=".view.Histo"
             android:label="@string/title_activity_histo"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.PilotActivity"></activity>
     </application>
 
 </manifest>

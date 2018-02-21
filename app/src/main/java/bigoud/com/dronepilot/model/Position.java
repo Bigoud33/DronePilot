@@ -1,10 +1,12 @@
 package bigoud.com.dronepilot.model;
 
+import java.io.Serializable;
+
 /**
  * Created by aeres on 2/12/2018.
  */
 
-public class Position
+public class Position implements Serializable
 {
     public double latitude;
     public double longitude;

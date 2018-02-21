@@ -9,7 +9,7 @@ public class DroneTask<V>
     private Thread thread = null;
     private volatile V result = null;
     private volatile boolean done = false;
-    private volatile boolean success = false;
+    private volatile boolean success = true;
     private volatile String message = "";
 
     public void run(Runnable runnable)
