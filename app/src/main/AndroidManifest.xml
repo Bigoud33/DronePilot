@@ -86,6 +86,7 @@
             android:label="@string/title_activity_histo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.PilotActivity"></activity>
+        <activity android:name=".Test"></activity>
     </application>
 
 </manifest>
