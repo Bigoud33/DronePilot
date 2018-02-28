@@ -1,5 +1,6 @@
 package bigoud.com.dronepilot.controller;
 
+import bigoud.com.dronepilot.model.MavicProInstance;
 import bigoud.com.dronepilot.model.Position;
 import bigoud.com.dronepilot.model.drone.ConnectResult;
 import bigoud.com.dronepilot.model.drone.DroneTask;
@@ -15,6 +16,11 @@ import bigoud.com.dronepilot.model.drone.TakePhotoResult;
 
 public class MavicPro extends VirtualDrone
 {
+    public MavicPro()
+    {
+        MavicProInstance inst = MavicProInstance.getInstance();
+    }
+
     @Override
     public void onConnect(DroneTask<ConnectResult> result)
     {
