@@ -1,6 +1,7 @@
 package bigoud.com.dronepilot;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,7 +43,6 @@ public class Test extends AppCompatActivity implements View.OnClickListener{
                 flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
-                        //DialogUtils.showDialogBasedOnError(getApplicationContext(), djiError);
                         if(djiError!=null)
                             ToastUtils.setResultToToast(djiError.toString());
                     }
