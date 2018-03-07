@@ -20,6 +20,9 @@ import dji.sdk.sdkmanager.DJISDKManager;
 
 import static bigoud.com.dronepilot.controller.SDK.controller.SDKApplication.TAG;
 
+import dji.sdk.base.BaseProduct;
+import dji.sdk.products.Aircraft;
+
 /**
  * Created by aeres on 2/28/2018.
  */
@@ -117,6 +120,17 @@ public class MavicProInstance
 
     private void notifyStatusChange() {
         SDKApplication.getEventBus().post(new ConnectivityChangeEvent());
+    }
+    private Aircraft aircraft = null;
+
+    public Aircraft getAircraft()
+    {
+        return aircraft;
+    }
+
+    public void setAircraft(Aircraft aircraft)
+    {
+        this.aircraft = aircraft;
     }
 
     public static class ConnectivityChangeEvent {
