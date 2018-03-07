@@ -64,7 +64,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback, Google
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        ((Button)findViewById(R.id.startButton)).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -75,8 +75,24 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback, Google
 
                 if(dronePositions.size() > 2)
                 {
+                    double lngAvg = 0.0;
+                    double latAvg = 0.0;
+
+                    for(int i = 0; i < dronePositions.size(); i++)
+                    {
+                        lngAvg += dronePositions.get(i).longitude;
+                        latAvg += dronePositions.get(i).latitude;
+                    }
+
+                    lngAvg /= dronePositions.size();
+                    latAvg /= dronePositions.size();
+                    Position pos = new Position();
+                    pos.latitude = latAvg;
+                    pos.longitude = lngAvg;
+
                     Intent intent = new Intent(that, PilotActivity.class);
                     intent.putExtra("points", dronePositions);
+                    intent.putExtra("center", pos);
                     startActivity(intent);
                 }
             }

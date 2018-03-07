@@ -1,5 +1,8 @@
 package bigoud.com.dronepilot.model;
 
+import dji.sdk.base.BaseProduct;
+import dji.sdk.products.Aircraft;
+
 /**
  * Created by aeres on 2/28/2018.
  */
@@ -16,8 +19,15 @@ public class MavicProInstance
         return instance;
     }
 
-    public MavicProInstance()
-    {
+    private Aircraft aircraft = null;
 
+    public Aircraft getAircraft()
+    {
+        return aircraft;
+    }
+
+    public void setAircraft(Aircraft aircraft)
+    {
+        this.aircraft = aircraft;
     }
 }

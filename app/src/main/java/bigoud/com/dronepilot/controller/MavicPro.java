@@ -9,6 +9,13 @@ import bigoud.com.dronepilot.model.drone.LookAtResult;
 import bigoud.com.dronepilot.model.drone.MoveToResult;
 import bigoud.com.dronepilot.model.drone.ReturnHomeResult;
 import bigoud.com.dronepilot.model.drone.TakePhotoResult;
+import dji.common.error.DJIError;
+import dji.common.flightcontroller.RTKState;
+import dji.common.util.CommonCallbacks;
+import dji.sdk.base.BaseProduct;
+import dji.sdk.flightcontroller.FlightController;
+import dji.sdk.products.Aircraft;
+import dji.sdk.sdkmanager.DJISDKManager;
 
 /**
  * Created by aeres on 2/12/2018.
@@ -16,21 +23,56 @@ import bigoud.com.dronepilot.model.drone.TakePhotoResult;
 
 public class MavicPro extends VirtualDrone
 {
-    public MavicPro()
+    private FlightController fc = null;
+    private Position pos = new Position();
+
+    public MavicPro() throws Exception
     {
-        MavicProInstance inst = MavicProInstance.getInstance();
+        if(MavicProInstance.getInstance().getAircraft() == null)
+            throw new Exception("Aircraft not set");
+
+        this.fc = MavicProInstance.getInstance().getAircraft().getFlightController();
+
+        fc.getRTK().setStateCallback(new RTKState.Callback()
+        {
+            @Override
+            public void onUpdate(RTKState rtkState)
+            {
+                MavicPro.this.pos.longitude = rtkState.getMobileStationLocation().getLongitude();
+                MavicPro.this.pos.latitude = rtkState.getMobileStationLocation().getLatitude();
+            }
+        });
     }
 
     @Override
     public void onConnect(DroneTask<ConnectResult> result)
     {
+        if(!MavicProInstance.getInstance().getAircraft().isConnected())
+        {
+            //TODO
+            result.setSuccess(false);
+            result.setMessage("TODO");
+        }
 
+        result.setSuccess(true);
+        result.setMessage("OK");
+        result.setResult(new ConnectResult(pos));
     }
 
     @Override
     public void onInitFlight(DroneTask<InitFlightResult> result)
     {
-
+        fc.startTakeoff(new CommonCallbacks.CompletionCallback()
+        {
+            @Override
+            public void onResult(DJIError djiError)
+            {
+                if(djiError != null)
+                {
+                    
+                }
+            }
+        });
     }
 
     @Override
@@ -60,7 +102,7 @@ public class MavicPro extends VirtualDrone
     @Override
     public Position getPosition()
     {
-        return null;
+        return pos;
     }
 
     @Override
