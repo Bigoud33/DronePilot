@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import bigoud.com.dronepilot.R;
 import bigoud.com.dronepilot.Test;
+import bigoud.com.dronepilot.model.MavicProInstance;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button newC=null;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         histo.setOnClickListener(this);
         test = findViewById(R.id.test);
         test.setOnClickListener(this);
+        MavicProInstance mpi = MavicProInstance.getInstance();
+        mpi.startSDKRegistration(getApplicationContext());
     }
 
     @Override
