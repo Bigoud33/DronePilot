@@ -22,7 +22,6 @@ public abstract class VirtualDrone
             public void run()
             {
                 onConnect(task);
-                task.setDone(true);
             }
         });
 
@@ -41,7 +40,6 @@ public abstract class VirtualDrone
             public void run()
             {
                 onInitFlight(task);
-                task.setDone(true);
             }
         });
 
@@ -60,7 +58,6 @@ public abstract class VirtualDrone
             public void run()
             {
                 onMoveTo(task, pos);
-                task.setDone(true);
             }
         });
 
@@ -79,7 +76,6 @@ public abstract class VirtualDrone
             public void run()
             {
                 onLookAt(task, pos);
-                task.setDone(true);
             }
         });
 
@@ -98,7 +94,6 @@ public abstract class VirtualDrone
             public void run()
             {
                 onReturnHome(task);
-                task.setDone(true);
             }
         });
 
@@ -117,7 +112,6 @@ public abstract class VirtualDrone
             public void run()
             {
                 onTakePhoto(task);
-                task.setDone(true);
             }
         });
 

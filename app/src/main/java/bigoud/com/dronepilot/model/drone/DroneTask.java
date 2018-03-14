@@ -8,7 +8,6 @@ public class DroneTask<V>
 {
     private Thread thread = null;
     private volatile V result = null;
-    private volatile boolean done = false;
     private volatile boolean success = true;
     private volatile String message = "";
 
@@ -42,16 +41,6 @@ public class DroneTask<V>
     public final void setResult(V result)
     {
         this.result = result;
-    }
-
-    public final boolean isDone()
-    {
-        return this.done;
-    }
-
-    public final void setDone(boolean done)
-    {
-        this.done = done;
     }
 
     public final boolean isSuccess()

@@ -1,5 +1,7 @@
 package bigoud.com.dronepilot.controller;
 
+import android.util.Log;
+
 import bigoud.com.dronepilot.model.MavicProInstance;
 import bigoud.com.dronepilot.model.Position;
 import bigoud.com.dronepilot.model.drone.ConnectResult;
@@ -10,6 +12,7 @@ import bigoud.com.dronepilot.model.drone.MoveToResult;
 import bigoud.com.dronepilot.model.drone.ReturnHomeResult;
 import bigoud.com.dronepilot.model.drone.TakePhotoResult;
 import dji.common.error.DJIError;
+import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.flightcontroller.RTKState;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseProduct;
@@ -60,19 +63,36 @@ public class MavicPro extends VirtualDrone
     }
 
     @Override
-    public void onInitFlight(DroneTask<InitFlightResult> result)
+    public void onInitFlight(final DroneTask<InitFlightResult> result)
     {
-        fc.startTakeoff(new CommonCallbacks.CompletionCallback()
+        LocationCoordinate3D pos3D = fc.getState().getAircraftLocation();
+        Position oldPos = new Position(pos3D.getLatitude(), pos3D.getLongitude(), pos3D.getAltitude());
+
+        CommonCallbacks.CompletionCallback callback = new CommonCallbacks.CompletionCallback()
         {
             @Override
             public void onResult(DJIError djiError)
             {
                 if(djiError != null)
                 {
-                    
+                    Log.e("DronePilot", djiError.toString());
                 }
+                else
+                {
+                    LocationCoordinate3D pos3D = fc.getState().getAircraftLocation();
+                    Position oldPos = new Position(pos3D.getLatitude(), pos3D.getLongitude(), pos3D.getAltitude());
+
+                    result.setResult(new InitFlightResult(pos));
+                    result.setMessage("OK");
+                    result.setSuccess(true);
+                }
+
+                this.notify();
             }
-        });
+        };
+
+        fc.startTakeoff(callback);
+        try {callback.wait();} catch (InterruptedException e) {}
     }
 
     @Override
