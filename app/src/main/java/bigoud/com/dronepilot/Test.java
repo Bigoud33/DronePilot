@@ -1,7 +1,9 @@
 package bigoud.com.dronepilot;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -60,9 +62,10 @@ public class Test extends AppCompatActivity implements View.OnClickListener{
         flightController.setVerticalControlMode(VerticalControlMode.POSITION);
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onClick(View v) {
-        FlightController flightController = ModuleVerificationUtil.getFlightController();
+        final FlightController flightController = ModuleVerificationUtil.getFlightController();
         if (flightController == null) {
             return;
         }
@@ -100,17 +103,23 @@ public class Test extends AppCompatActivity implements View.OnClickListener{
                             ToastUtils.setResultToToast(djiError.toString());
                     }
                 });*/
-                FlightControlData fcd = new FlightControlData(0,0,0,10);
-                //while(flightController.getState().getAircraftLocation().getAltitude()<10) {
-                    flightController.sendVirtualStickFlightControlData(fcd, new CommonCallbacks.CompletionCallback() {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        FlightControlData fcd = new FlightControlData(0,0,0,10);
+                        while(flightController.getState().getAircraftLocation().getAltitude()<10) {
+                            flightController.sendVirtualStickFlightControlData(fcd, new CommonCallbacks.CompletionCallback() {
 
-                        @Override
-                        public void onResult(DJIError djiError) {
-                            if (djiError != null)
-                                ToastUtils.setResultToToast(djiError.toString());
+                                @Override
+                                public void onResult(DJIError djiError) {
+                                    if (djiError != null)
+                                        ToastUtils.setResultToToast(djiError.toString());
+                                }
+                            });
                         }
-                    });
-                //}
+                        return null;
+                    }
+                }.execute();
 
                 break;
             default:
