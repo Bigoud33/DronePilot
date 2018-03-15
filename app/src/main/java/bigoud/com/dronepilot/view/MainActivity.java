@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import bigoud.com.dronepilot.R;
 import bigoud.com.dronepilot.Test;
+import bigoud.com.dronepilot.controller.SDK.utils.ModuleVerificationUtil;
 import bigoud.com.dronepilot.model.MavicProInstance;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -60,8 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(Histo);
                 break;
             case R.id.test:
-                Intent Test = new Intent(this, Test.class);
-                startActivity(Test);
+                if(ModuleVerificationUtil.isFlightControllerAvailable()) {
+                    Intent Test = new Intent(this, Test.class);
+                    startActivity(Test);
+                }
                 break;
         }
     }
