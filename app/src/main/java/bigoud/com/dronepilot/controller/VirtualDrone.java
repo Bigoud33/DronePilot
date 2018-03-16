@@ -124,10 +124,10 @@ public abstract class VirtualDrone
 
     private final void cancelCurrent()
     {
-        if(!this.currentTask.isDone())
+        /*if(!this.currentTask.isDone())
         {
             this.currentTask.cancel();
             this.currentTask = null;
-        }
+        }*/
     }
 }
