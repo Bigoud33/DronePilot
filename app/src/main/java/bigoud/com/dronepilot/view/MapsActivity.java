@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -35,7 +34,7 @@ import bigoud.com.dronepilot.R;
 import bigoud.com.dronepilot.model.Position;
 import dji.internal.cache.component.FlightController;
 
-public class Maps extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener
 {
     public class PhotoPos
     {
@@ -52,7 +51,7 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback, Google
 
     private volatile ArrayList<PhotoPos> positions = new ArrayList();
     private Polygon polygon = null;
-    Maps that = this;
+    MapsActivity that = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

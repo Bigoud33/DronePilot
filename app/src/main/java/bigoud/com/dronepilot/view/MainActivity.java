@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     , 1);
         }
-        setContentView(R.layout.activity_mainmenu);
+        setContentView(R.layout.activity_main);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
         newC = findViewById(R.id.newC);
         newC.setOnClickListener(this);
@@ -52,11 +52,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.newC:
-                Intent Maps = new Intent(this, Maps.class);
+                Intent Maps = new Intent(this, MapsActivity.class);
                 startActivity(Maps);
                 break;
             case R.id.histo:
-                Intent Histo = new Intent(this, Histo.class);
+                Intent Histo = new Intent(this, HistoryActivity.class);
                 startActivity(Histo);
                 break;
             case R.id.test:

@@ -79,12 +79,12 @@ public class MavicPro extends VirtualDrone
                 }
                 else
                 {
-                    LocationCoordinate3D pos3D = fc.getState().getAircraftLocation();
+                    /*LocationCoordinate3D pos3D = fc.getState().getAircraftLocation();
                     Position oldPos = new Position(pos3D.getLatitude(), pos3D.getLongitude(), pos3D.getAltitude());
 
                     result.setResult(new InitFlightResult(pos));
                     result.setMessage("OK");
-                    result.setSuccess(true);
+                    result.setSuccess(true);*/
                 }
 
                 this.notify();

@@ -74,9 +74,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FPVActivity" />
         <activity
-            android:name=".view.Maps"
+            android:name=".view.MapsActivity"
             android:label="@string/title_activity_maps" />
 
         <meta-data
@@ -84,7 +83,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".view.Histo"
+            android:name=".view.HistoryActivity"
             android:label="@string/title_activity_histo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.PilotActivity" />
