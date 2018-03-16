@@ -1,13 +1,12 @@
-package bigoud.com.dronepilot.model.drone;
+package bigoud.com.dronepilot.controller;
 
 /**
  * Created by aeres on 2/13/2018.
  */
 
-public class DroneTask<V>
+public class DroneTask
 {
     private Thread thread = null;
-    private volatile V result = null;
     private volatile boolean success = true;
     private volatile String message = "";
 
@@ -33,14 +32,9 @@ public class DroneTask<V>
         try {this.thread.join();} catch (InterruptedException e) {}
     }
 
-    public final V getResult()
+    public boolean isRunning()
     {
-        return this.result;
-    }
-
-    public final void setResult(V result)
-    {
-        this.result = result;
+        return this.thread.isAlive();
     }
 
     public final boolean isSuccess()

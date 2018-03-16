@@ -4,21 +4,11 @@ import android.util.Log;
 
 import bigoud.com.dronepilot.model.MavicProInstance;
 import bigoud.com.dronepilot.model.Position;
-import bigoud.com.dronepilot.model.drone.ConnectResult;
-import bigoud.com.dronepilot.model.drone.DroneTask;
-import bigoud.com.dronepilot.model.drone.InitFlightResult;
-import bigoud.com.dronepilot.model.drone.LookAtResult;
-import bigoud.com.dronepilot.model.drone.MoveToResult;
-import bigoud.com.dronepilot.model.drone.ReturnHomeResult;
-import bigoud.com.dronepilot.model.drone.TakePhotoResult;
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.flightcontroller.RTKState;
 import dji.common.util.CommonCallbacks;
-import dji.sdk.base.BaseProduct;
 import dji.sdk.flightcontroller.FlightController;
-import dji.sdk.products.Aircraft;
-import dji.sdk.sdkmanager.DJISDKManager;
 
 /**
  * Created by aeres on 2/12/2018.
@@ -28,6 +18,7 @@ public class MavicPro extends VirtualDrone
 {
     private FlightController fc = null;
     private Position pos = new Position();
+    private float heading = 0.0f;
 
     public MavicPro() throws Exception
     {
@@ -43,12 +34,13 @@ public class MavicPro extends VirtualDrone
             {
                 MavicPro.this.pos.longitude = rtkState.getMobileStationLocation().getLongitude();
                 MavicPro.this.pos.latitude = rtkState.getMobileStationLocation().getLatitude();
+                MavicPro.this.heading = rtkState.getHeading();
             }
         });
     }
 
     @Override
-    public void onConnect(DroneTask<ConnectResult> result)
+    public void onConnect(DroneTask result)
     {
         if(!MavicProInstance.getInstance().getAircraft().isConnected())
         {
@@ -59,14 +51,12 @@ public class MavicPro extends VirtualDrone
 
         result.setSuccess(true);
         result.setMessage("OK");
-        result.setResult(new ConnectResult(pos));
     }
 
     @Override
-    public void onInitFlight(final DroneTask<InitFlightResult> result)
+    public void onInitFlight(final DroneTask result)
     {
         LocationCoordinate3D pos3D = fc.getState().getAircraftLocation();
-        Position oldPos = new Position(pos3D.getLatitude(), pos3D.getLongitude(), pos3D.getAltitude());
 
         CommonCallbacks.CompletionCallback callback = new CommonCallbacks.CompletionCallback()
         {
@@ -82,7 +72,6 @@ public class MavicPro extends VirtualDrone
                     /*LocationCoordinate3D pos3D = fc.getState().getAircraftLocation();
                     Position oldPos = new Position(pos3D.getLatitude(), pos3D.getLongitude(), pos3D.getAltitude());
 
-                    result.setResult(new InitFlightResult(pos));
                     result.setMessage("OK");
                     result.setSuccess(true);*/
                 }
@@ -93,28 +82,31 @@ public class MavicPro extends VirtualDrone
 
         fc.startTakeoff(callback);
         try {callback.wait();} catch (InterruptedException e) {}
+
+        result.setSuccess(true);
+        result.setMessage("OK");
     }
 
     @Override
-    public void onMoveTo(DroneTask<MoveToResult> result, Position pos)
+    public void onMoveTo(DroneTask result, Position pos)
     {
 
     }
 
     @Override
-    public void onLookAt(DroneTask<LookAtResult> result, Position pos)
+    public void onLookAt(DroneTask result, Position pos)
     {
 
     }
 
     @Override
-    public void onReturnHome(DroneTask<ReturnHomeResult> result)
+    public void onReturnHome(DroneTask result)
     {
 
     }
 
     @Override
-    public void onTakePhoto(DroneTask<TakePhotoResult> result)
+    public void onTakePhoto(DroneTask result)
     {
 
     }
@@ -123,6 +115,12 @@ public class MavicPro extends VirtualDrone
     public Position getPosition()
     {
         return pos;
+    }
+
+    @Override
+    public float getHeading()
+    {
+        return heading;
     }
 
     @Override

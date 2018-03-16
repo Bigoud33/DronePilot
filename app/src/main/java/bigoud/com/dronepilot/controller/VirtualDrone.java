@@ -1,7 +1,6 @@
 package bigoud.com.dronepilot.controller;
 
 import bigoud.com.dronepilot.model.Position;
-import bigoud.com.dronepilot.model.drone.*;
 
 /**
  * Created by aeres on 2/12/2018.
@@ -11,11 +10,11 @@ public abstract class VirtualDrone
 {
     private volatile DroneTask currentTask = null;
 
-    public abstract void onConnect(DroneTask<ConnectResult> result);
-    public final DroneTask<ConnectResult> connect()
+    public abstract void onConnect(DroneTask result);
+    public final DroneTask connect()
     {
         this.cancelCurrent();
-        final DroneTask<ConnectResult> task = new DroneTask<ConnectResult>();
+        final DroneTask task = new DroneTask();
         task.run(new Runnable()
         {
             @Override
@@ -29,11 +28,11 @@ public abstract class VirtualDrone
         return task;
     }
 
-    public abstract void onInitFlight(DroneTask<InitFlightResult> result);
-    public final DroneTask<InitFlightResult> initFlight()
+    public abstract void onInitFlight(DroneTask result);
+    public final DroneTask initFlight()
     {
         this.cancelCurrent();
-        final DroneTask<InitFlightResult> task = new DroneTask<InitFlightResult>();
+        final DroneTask task = new DroneTask();
         task.run(new Runnable()
         {
             @Override
@@ -47,11 +46,11 @@ public abstract class VirtualDrone
         return task;
     }
 
-    public abstract void onMoveTo(DroneTask<MoveToResult> result, Position pos);
-    public final DroneTask<MoveToResult> moveTo(final Position pos)
+    public abstract void onMoveTo(DroneTask result, Position pos);
+    public final DroneTask moveTo(final Position pos)
     {
         this.cancelCurrent();
-        final DroneTask<MoveToResult> task = new DroneTask<MoveToResult>();
+        final DroneTask task = new DroneTask();
         task.run(new Runnable()
         {
             @Override
@@ -65,11 +64,11 @@ public abstract class VirtualDrone
         return task;
     }
 
-    public abstract void onLookAt(DroneTask<LookAtResult> result, Position pos);
-    public final DroneTask<LookAtResult> lookAt(final Position pos)
+    public abstract void onLookAt(DroneTask result, Position pos);
+    public final DroneTask lookAt(final Position pos)
     {
         this.cancelCurrent();
-        final DroneTask<LookAtResult> task = new DroneTask<LookAtResult>();
+        final DroneTask task = new DroneTask();
         task.run(new Runnable()
         {
             @Override
@@ -83,11 +82,11 @@ public abstract class VirtualDrone
         return task;
     }
 
-    public abstract void onReturnHome(DroneTask<ReturnHomeResult> result);
-    public final DroneTask<ReturnHomeResult> returnHome()
+    public abstract void onReturnHome(DroneTask result);
+    public final DroneTask returnHome()
     {
         this.cancelCurrent();
-        final DroneTask<ReturnHomeResult> task = new DroneTask<ReturnHomeResult>();
+        final DroneTask task = new DroneTask();
         task.run(new Runnable()
         {
             @Override
@@ -101,11 +100,11 @@ public abstract class VirtualDrone
         return task;
     }
 
-    public abstract void onTakePhoto(DroneTask<TakePhotoResult> result);
-    public final DroneTask<TakePhotoResult> takePhoto()
+    public abstract void onTakePhoto(DroneTask result);
+    public final DroneTask takePhoto()
     {
         this.cancelCurrent();
-        final DroneTask<TakePhotoResult> task = new DroneTask<TakePhotoResult>();
+        final DroneTask task = new DroneTask();
         task.run(new Runnable()
         {
             @Override
@@ -120,14 +119,15 @@ public abstract class VirtualDrone
     }
 
     public abstract Position getPosition();
+    public abstract float getHeading();
     public abstract void getVideo();
 
     private final void cancelCurrent()
     {
-        /*if(!this.currentTask.isDone())
+        if(!this.currentTask.isRunning())
         {
             this.currentTask.cancel();
             this.currentTask = null;
-        }*/
+        }
     }
 }
