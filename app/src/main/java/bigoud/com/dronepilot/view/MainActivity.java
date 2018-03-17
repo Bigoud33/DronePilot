@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import bigoud.com.dronepilot.R;
 import bigoud.com.dronepilot.Test;
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button newC=null;
     private Button histo=null;
     private Button test=null;
+    private ImageButton settings = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         histo.setOnClickListener(this);
         test = findViewById(R.id.test);
         test.setOnClickListener(this);
+        settings = findViewById(R.id.btn_settings);
+        settings.setOnClickListener(this);
+
         MavicProInstance mpi = MavicProInstance.getInstance();
         mpi.startSDKRegistration(getApplicationContext());
     }
@@ -65,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(Test);
                 }
                 break;
+            case R.id.btn_settings:
+                Intent Settings = new Intent(this, SettingsActivity.class);
+                startActivity(Settings);
+                break;
+            default:
         }
     }
 }
