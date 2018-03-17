@@ -1,6 +1,7 @@
 package bigoud.com.dronepilot.controller;
 
 import bigoud.com.dronepilot.model.Position;
+import dji.sdk.camera.VideoFeeder;
 
 /**
  * Created by aeres on 2/13/2018.
@@ -16,6 +17,13 @@ public class SimulationDrone extends VirtualDrone
     public void onConnect(DroneTask result)
     {
         try {Thread.sleep(1000);} catch (InterruptedException e) {}
+        result.setMessage("OK");
+        result.setSuccess(true);
+    }
+
+    @Override
+    public void onDisconnect(DroneTask result)
+    {
         result.setMessage("OK");
         result.setSuccess(true);
     }
@@ -60,21 +68,24 @@ public class SimulationDrone extends VirtualDrone
     }
 
     @Override
-    public void onLookAt(DroneTask result, Position pos)
+    public void onLookAt(DroneTask result, Position pos, boolean continuous)
     {
-
+        result.setMessage("OK");
+        result.setSuccess(true);
     }
 
     @Override
     public void onReturnHome(DroneTask result)
     {
-
+        result.setMessage("OK");
+        result.setSuccess(true);
     }
 
     @Override
     public void onTakePhoto(DroneTask result)
     {
-
+        result.setMessage("OK");
+        result.setSuccess(true);
     }
 
     @Override
@@ -89,8 +100,8 @@ public class SimulationDrone extends VirtualDrone
     }
 
     @Override
-    public void getVideo()
+    public VideoFeeder.VideoFeed getVideo()
     {
-
+        return null;
     }
 }

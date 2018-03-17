@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 public class Position implements Serializable
 {
-    public double latitude;
-    public double longitude;
-    public double height;
+    public volatile double latitude;
+    public volatile double longitude;
+    public volatile double height;
 
     public Position()
     {

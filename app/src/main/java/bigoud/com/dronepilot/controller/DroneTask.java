@@ -9,6 +9,7 @@ public class DroneTask
     private Thread thread = null;
     private volatile boolean success = true;
     private volatile String message = "";
+    private volatile boolean running = true; // Used by some calls
 
     public void run(Runnable runnable)
     {
@@ -28,13 +29,19 @@ public class DroneTask
 
     public void cancel()
     {
+        this.running = false;
         this.thread.interrupt();
         try {this.thread.join();} catch (InterruptedException e) {}
     }
 
-    public boolean isRunning()
+    public boolean isAlive()
     {
         return this.thread.isAlive();
+    }
+
+    public boolean isRunning()
+    {
+        return this.running;
     }
 
     public final boolean isSuccess()
