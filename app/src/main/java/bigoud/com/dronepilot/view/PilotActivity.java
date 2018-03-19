@@ -1,5 +1,6 @@
 package bigoud.com.dronepilot.view;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 
 import bigoud.com.dronepilot.R;
 import bigoud.com.dronepilot.controller.DroneTask;
+import bigoud.com.dronepilot.controller.MavicPro;
 import bigoud.com.dronepilot.controller.SimulationDrone;
 import bigoud.com.dronepilot.controller.VirtualDrone;
 import bigoud.com.dronepilot.model.Position;
@@ -15,7 +17,7 @@ import dji.sdk.camera.VideoFeeder;
 
 public class PilotActivity extends AppCompatActivity
 {
-    private final VirtualDrone drone = new SimulationDrone();
+    private final VirtualDrone drone = new MavicPro();
     private ArrayList<Position> positions = new ArrayList();
 
     @Override
@@ -23,6 +25,7 @@ public class PilotActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pilot);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 
         this.positions = (ArrayList<Position>)getIntent().getSerializableExtra("points");
         DroneTask connect = drone.connect();
@@ -46,6 +49,8 @@ public class PilotActivity extends AppCompatActivity
 
     private boolean shoot()
     {
+        Log.d("DronePilot", "Starting");
+
         // Calculates center point;
         Position middle = new Position();
 
@@ -57,6 +62,8 @@ public class PilotActivity extends AppCompatActivity
             Log.e("DronePilot", initFlight.getMessage());
             return false;
         }
+
+        Log.d("DronePilot", "Flight initiated");
 
         for(Position pos : this.positions)
         {
@@ -90,6 +97,8 @@ public class PilotActivity extends AppCompatActivity
                 return false;
             }
         }
+
+        Log.d("DronePilot", "Ended. Going back home.");
 
         DroneTask homeTask = drone.returnHome();
         homeTask.join();

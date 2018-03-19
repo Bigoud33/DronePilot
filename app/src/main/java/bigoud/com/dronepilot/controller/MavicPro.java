@@ -1,9 +1,12 @@
 package bigoud.com.dronepilot.controller;
 
+import android.util.Log;
+
 import bigoud.com.dronepilot.controller.SDK.controller.SDKApplication;
 import bigoud.com.dronepilot.model.MavicProInstance;
 import bigoud.com.dronepilot.model.Position;
 import dji.common.error.DJIError;
+import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.flightcontroller.RTKState;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.camera.VideoFeeder;
@@ -17,8 +20,6 @@ import dji.sdk.mobilerc.MobileRemoteController;
 public class MavicPro extends VirtualDrone
 {
     private FlightController fc = null;
-    private Position pos = new Position();
-    private volatile float heading = 0.0f;
 
     private Thread controlThread = null;
     private volatile boolean controlThreadRunning = false;
@@ -27,30 +28,15 @@ public class MavicPro extends VirtualDrone
     private volatile float controlRightX = 0.0f;
     private volatile float controlRightY = 0.0f;
 
-    public MavicPro() throws Exception
+    public MavicPro()
     {
-        if(MavicProInstance.getInstance().getAircraft() == null)
-            throw new Exception("Aircraft not set");
-
-        this.fc = MavicProInstance.getInstance().getAircraft().getFlightController();
-
-        fc.getRTK().setStateCallback(new RTKState.Callback()
-        {
-            @Override
-            public void onUpdate(RTKState rtkState)
-            {
-                MavicPro.this.pos.longitude = rtkState.getMobileStationLocation().getLongitude();
-                MavicPro.this.pos.latitude = rtkState.getMobileStationLocation().getLatitude();
-                MavicPro.this.pos.height = rtkState.getMobileStationAltitude();
-                MavicPro.this.heading = rtkState.getHeading();
-            }
-        });
+        this.fc = SDKApplication.getAircraftInstance().getFlightController();
     }
 
     @Override
     public void onConnect(DroneTask result)
     {
-        if(!MavicProInstance.getInstance().getAircraft().isConnected())
+        if(!SDKApplication.getAircraftInstance().isConnected())
         {
             //TODO
             result.setSuccess(false);
@@ -137,11 +123,13 @@ public class MavicPro extends VirtualDrone
     {
         DroneTask lookTask = this.lookAt(pos, true);
         double delta = 100;
+        LocationCoordinate3D dronePos = null;
 
         while(delta > 0.00008)
         {
-            double opposite = Math.abs(this.pos.longitude - pos.longitude);
-            double adjacent = Math.abs(this.pos.latitude - pos.latitude);
+            dronePos = fc.getState().getAircraftLocation();
+            double opposite = Math.abs(dronePos.getLongitude() - pos.longitude);
+            double adjacent = Math.abs(dronePos.getLatitude() - pos.latitude);
             delta = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2));
 
             try {Thread.sleep(100);} catch (InterruptedException e) {}
@@ -160,10 +148,13 @@ public class MavicPro extends VirtualDrone
     public void onLookAt(DroneTask result, Position pos, boolean continuous)
     {
         float delta = 180;
+        LocationCoordinate3D dronePos = null;
+
         while(result.isRunning() && (!continuous || Math.abs(delta) > 1.0))
         {
-            double opposite = Math.abs(this.pos.longitude - pos.longitude);
-            double adjacent = Math.abs(this.pos.latitude - pos.latitude);
+            dronePos = fc.getState().getAircraftLocation();
+            double opposite = Math.abs(dronePos.getLongitude() - pos.longitude);
+            double adjacent = Math.abs(dronePos.getLatitude() - pos.latitude);
             double hypotenuse = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2));
             double cos = adjacent / hypotenuse;
             double sin = opposite / hypotenuse;
@@ -173,7 +164,7 @@ public class MavicPro extends VirtualDrone
                 angle += 180.0;
 
             angle = 360 - angle; // because SDK doesn't use trigonometric rotation
-            delta = this.heading - angle;
+            delta = fc.getCompass().getHeading() - angle;
             if(delta > 180)
                 delta = - (360 - delta);
             else if(delta < -180)
@@ -278,13 +269,19 @@ public class MavicPro extends VirtualDrone
     @Override
     public Position getPosition()
     {
+        Position pos = new Position();
+        LocationCoordinate3D dronePos = fc.getState().getAircraftLocation();
+
+        pos.longitude = dronePos.getLongitude();
+        pos.latitude = dronePos.getLatitude();
+        pos.height = dronePos.getAltitude();
         return pos;
     }
 
     @Override
     public float getHeading()
     {
-        return heading;
+        return fc.getCompass().getHeading();
     }
 
     @Override
