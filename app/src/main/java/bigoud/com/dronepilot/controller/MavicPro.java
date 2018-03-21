@@ -10,6 +10,9 @@ import bigoud.com.dronepilot.model.Position;
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.flightcontroller.RTKState;
+import dji.common.flightcontroller.virtualstick.RollPitchControlMode;
+import dji.common.flightcontroller.virtualstick.VerticalControlMode;
+import dji.common.flightcontroller.virtualstick.YawControlMode;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.flightcontroller.FlightController;
@@ -89,6 +92,37 @@ public class MavicPro extends VirtualDrone
         try {lock.await();} catch (InterruptedException e) {}
         if(!result.isSuccess())
             return;
+
+        final CountDownLatch lock2 = new CountDownLatch(1);
+
+        fc.setVirtualStickModeEnabled(true, new CommonCallbacks.CompletionCallback()
+        {
+            @Override
+            public void onResult(DJIError djiError)
+            {
+                if(djiError != null)
+                {
+                    result.setSuccess(false);
+                    result.setMessage(djiError.toString());
+                }
+                else
+                {
+                    fc.setVirtualStickAdvancedModeEnabled(true);
+                    result.setSuccess(true);
+                    result.setMessage("OK");
+                }
+
+                lock2.countDown();
+            }
+        });
+
+        try {lock2.await();} catch (InterruptedException e) {}
+        if(!result.isSuccess())
+            return;
+
+        fc.setRollPitchControlMode(RollPitchControlMode.ANGLE);
+        fc.setYawControlMode(YawControlMode.ANGLE);
+        fc.setVerticalControlMode(VerticalControlMode.VELOCITY);
 
         controlThread = new Thread(new Runnable()
         {
