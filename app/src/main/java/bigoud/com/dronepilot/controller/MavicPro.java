@@ -2,6 +2,8 @@ package bigoud.com.dronepilot.controller;
 
 import android.util.Log;
 
+import java.util.concurrent.CountDownLatch;
+
 import bigoud.com.dronepilot.controller.SDK.controller.SDKApplication;
 import bigoud.com.dronepilot.model.MavicProInstance;
 import bigoud.com.dronepilot.model.Position;
@@ -62,7 +64,9 @@ public class MavicPro extends VirtualDrone
     @Override
     public void onInitFlight(final DroneTask result)
     {
-        CommonCallbacks.CompletionCallback callback = new CommonCallbacks.CompletionCallback()
+        final CountDownLatch lock = new CountDownLatch(1);
+
+        fc.startTakeoff(new CommonCallbacks.CompletionCallback()
         {
             @Override
             public void onResult(DJIError djiError)
@@ -78,13 +82,11 @@ public class MavicPro extends VirtualDrone
                     result.setMessage("OK");
                 }
 
-                this.notify();
+                lock.countDown();
             }
-        };
+        });
 
-        fc.startTakeoff(callback);
-        try {callback.wait();} catch (InterruptedException e) {}
-
+        try {lock.await();} catch (InterruptedException e) {}
         if(!result.isSuccess())
             return;
 
@@ -193,7 +195,9 @@ public class MavicPro extends VirtualDrone
         try {controlThread.join();} catch (InterruptedException e) {}
         controlThread = null;
 
-        CommonCallbacks.CompletionCallback callback = new CommonCallbacks.CompletionCallback()
+        final CountDownLatch lock = new CountDownLatch(1);
+
+        this.fc.startGoHome(new CommonCallbacks.CompletionCallback()
         {
             @Override
             public void onResult(DJIError djiError)
@@ -209,35 +213,16 @@ public class MavicPro extends VirtualDrone
                     result.setMessage("OK");
                 }
 
-                this.notify();
+                lock.countDown();
             }
-        };
+        });
 
-        this.fc.startTakeoff(callback);
-        try {callback.wait();} catch (InterruptedException e) {}
+        try {lock.await();} catch (InterruptedException e) {}
 
         if(!result.isSuccess())
             return;
 
-        final CommonCallbacks.CompletionCallback landCB = new CommonCallbacks.CompletionCallback()
-        {
-            @Override
-            public void onResult(DJIError djiError)
-            {
-                if(djiError != null)
-                {
-                    result.setSuccess(false);
-                    result.setMessage(djiError.toString());
-                }
-                else
-                {
-                    result.setSuccess(true);
-                    result.setMessage("OK");
-                }
-
-                this.notify();
-            }
-        };
+        final CountDownLatch lock2 = new CountDownLatch(1);
 
         fc.startLanding(new CommonCallbacks.CompletionCallback()
         {
@@ -248,16 +233,34 @@ public class MavicPro extends VirtualDrone
                 {
                     result.setSuccess(false);
                     result.setMessage(djiError.toString());
-                    landCB.notify();
+                    lock2.countDown();
                 }
                 else
                 {
-                    fc.confirmLanding(landCB);
+                    fc.confirmLanding(new CommonCallbacks.CompletionCallback()
+                    {
+                        @Override
+                        public void onResult(DJIError djiError)
+                        {
+                            if(djiError != null)
+                            {
+                                result.setSuccess(false);
+                                result.setMessage(djiError.toString());
+                            }
+                            else
+                            {
+                                result.setSuccess(true);
+                                result.setMessage("OK");
+                            }
+
+                            lock2.countDown();
+                        }
+                    });
                 }
             }
         });
 
-        try {landCB.wait();} catch (InterruptedException e) {}
+        try {lock2.await();} catch (InterruptedException e) {}
     }
 
     @Override
