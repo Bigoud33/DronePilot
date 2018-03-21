@@ -37,78 +37,87 @@ public class PilotActivity extends AppCompatActivity
             ((VideoFeedView)findViewById(R.id.video_feed)).registerLiveVideo(feed, true);
         }
 
-        if(!this.shoot())
-        {
-
-        }
-        else
-        {
-
-        }
+        this.shoot();
     }
 
-    private boolean shoot()
+    private void shoot()
     {
-        Log.d("DronePilot", "Starting");
-
-        // Calculates center point;
-        Position middle = new Position();
-
-        DroneTask initFlight = drone.initFlight();
-        initFlight.join();
-
-        if(!initFlight.isSuccess())
+        new Thread(new Runnable()
         {
-            Log.e("DronePilot", initFlight.getMessage());
-            return false;
-        }
-
-        Log.d("DronePilot", "Flight initiated");
-
-        for(Position pos : this.positions)
-        {
-            DroneTask moveTask = drone.moveTo(pos);
-            moveTask.join();
-
-            if(!moveTask.isSuccess())
+            @Override
+            public void run()
             {
-                Log.e("DronePilot", moveTask.getMessage());
-                drone.returnHome();
-                return false;
+                Log.d("DronePilot", "Starting");
+
+                // Calculates center point;
+                Position middle = new Position();
+
+                DroneTask initFlight = drone.initFlight();
+                initFlight.join();
+
+                if(!initFlight.isSuccess())
+                {
+                    Log.e("DronePilot", initFlight.getMessage());
+                    return;
+                }
+
+                Log.d("DronePilot", "Flight initiated");
+
+                int current = 0;
+                for(Position pos : PilotActivity.this.positions)
+                {
+                    Log.d("DronePilot", "Moving to position " + Integer.toString(current) + "/" + Integer.toString(PilotActivity.this.positions.size()));
+                    current++;
+
+                    DroneTask moveTask = drone.moveTo(pos);
+                    moveTask.join();
+
+                    if(!moveTask.isSuccess())
+                    {
+                        Log.e("DronePilot", moveTask.getMessage());
+                        drone.returnHome();
+                        return;
+                    }
+
+                    Log.d("DronePilot", "Moved to position, starting taking photo...");
+
+                    DroneTask lookTask = drone.lookAt(middle, false);
+                    lookTask.join();
+
+                    if(!lookTask.isSuccess())
+                    {
+                        Log.e("DronePilot", lookTask.getMessage());
+                        drone.returnHome();
+                        return;
+                    }
+
+                    Log.d("DronePilot", "Looking at building");
+
+                    DroneTask photoTask = drone.takePhoto();
+                    photoTask.join();
+
+                    if(!photoTask.isSuccess())
+                    {
+                        Log.e("DronePilot", photoTask.getMessage());
+                        drone.returnHome();
+                        return;
+                    }
+
+                    Log.d("DronePilot", "Took photo");
+                }
+
+                Log.d("DronePilot", "Ended. Going back home.");
+
+                DroneTask homeTask = drone.returnHome();
+                homeTask.join();
+
+                if(!homeTask.isSuccess())
+                {
+                    Log.e("DronePilot", homeTask.getMessage());
+                }
+
+                Log.d("DronePilot", "Landed successfully");
             }
-
-            DroneTask lookTask = drone.lookAt(middle, false);
-            lookTask.join();
-
-            if(!lookTask.isSuccess())
-            {
-                Log.e("DronePilot", lookTask.getMessage());
-                drone.returnHome();
-                return false;
-            }
-
-            DroneTask photoTask = drone.takePhoto();
-            photoTask.join();
-
-            if(!photoTask.isSuccess())
-            {
-                Log.e("DronePilot", photoTask.getMessage());
-                drone.returnHome();
-                return false;
-            }
-        }
-
-        Log.d("DronePilot", "Ended. Going back home.");
-
-        DroneTask homeTask = drone.returnHome();
-        homeTask.join();
-
-        if(!homeTask.isSuccess())
-        {
-            Log.e("DronePilot", homeTask.getMessage());
-            return false;
-        }
-
-        return true;
+        }).start();
     }
 }
