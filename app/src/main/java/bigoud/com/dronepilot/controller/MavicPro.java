@@ -123,6 +123,7 @@ public class MavicPro extends VirtualDrone
         fc.setRollPitchControlMode(RollPitchControlMode.ANGLE);
         fc.setYawControlMode(YawControlMode.ANGLE);
         fc.setVerticalControlMode(VerticalControlMode.VELOCITY);
+        controlThreadRunning = true;
 
         controlThread = new Thread(new Runnable()
         {
@@ -133,6 +134,7 @@ public class MavicPro extends VirtualDrone
 
                 while(controlThreadRunning)
                 {
+                    Log.d("TEST", "TEST");
                     mrc.setLeftStickHorizontal(controlLeftX);
                     mrc.setLeftStickVertical(controlLeftY);
                     mrc.setRightStickHorizontal(controlRightX);
@@ -143,7 +145,7 @@ public class MavicPro extends VirtualDrone
             }
         });
 
-        controlThreadRunning = true;
+
         controlLeftX = 0.0f;
         controlLeftY = 0.0f;
         controlRightX = 0.0f;
