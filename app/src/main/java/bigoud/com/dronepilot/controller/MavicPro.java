@@ -67,32 +67,6 @@ public class MavicPro extends VirtualDrone
     @Override
     public void onInitFlight(final DroneTask result)
     {
-        final CountDownLatch lock = new CountDownLatch(1);
-
-        fc.startTakeoff(new CommonCallbacks.CompletionCallback()
-        {
-            @Override
-            public void onResult(DJIError djiError)
-            {
-                if(djiError != null)
-                {
-                    result.setSuccess(false);
-                    result.setMessage(djiError.toString());
-                }
-                else
-                {
-                    result.setSuccess(true);
-                    result.setMessage("OK");
-                }
-
-                lock.countDown();
-            }
-        });
-
-        try {lock.await();} catch (InterruptedException e) {}
-        if(!result.isSuccess())
-            return;
-
         final CountDownLatch lock2 = new CountDownLatch(1);
 
         fc.setVirtualStickModeEnabled(true, new CommonCallbacks.CompletionCallback()
@@ -117,6 +91,32 @@ public class MavicPro extends VirtualDrone
         });
 
         try {lock2.await();} catch (InterruptedException e) {}
+        if(!result.isSuccess())
+            return;
+
+        final CountDownLatch lock = new CountDownLatch(1);
+
+        fc.startTakeoff(new CommonCallbacks.CompletionCallback()
+        {
+            @Override
+            public void onResult(DJIError djiError)
+            {
+                if(djiError != null)
+                {
+                    result.setSuccess(false);
+                    result.setMessage(djiError.toString());
+                }
+                else
+                {
+                    result.setSuccess(true);
+                    result.setMessage("OK");
+                }
+
+                lock.countDown();
+            }
+        });
+
+        try {lock.await();} catch (InterruptedException e) {}
         if(!result.isSuccess())
             return;
 
