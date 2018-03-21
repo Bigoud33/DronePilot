@@ -170,6 +170,11 @@ public class MavicPro extends VirtualDrone
             double adjacent = Math.abs(dronePos.getLatitude() - pos.latitude);
             delta = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2));
 
+            if(delta > 0.0005)
+                this.controlRightY = 1.0f;
+            else
+                this.controlRightY = (float)(delta * 2000);
+
             try {Thread.sleep(100);} catch (InterruptedException e) {}
         }
 
